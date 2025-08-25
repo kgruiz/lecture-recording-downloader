@@ -1,9 +1,7 @@
 // In-memory state per tab: Map<tabId, Map<url, Mp4Record>>
 const TAB_STATE = new Map();
 
-// Pending download header injection support
-const PENDING_DOWNLOAD_URLS = new Set();
-const PENDING_HEADERS_BY_URL = new Map(); // url -> Array<{name, value}>
+// Pending download header injection support removed for MV3 non-blocking environment
 
 /**
  * @typedef {{ start: number|null, end: number|null } | null} RangeReq
@@ -71,18 +69,7 @@ function getHeader(headers, name) {
   return null;
 }
 
-function setOrAddHeader(headers, name, value) {
-  const lname = name.toLowerCase();
-  let found = false;
-  for (const h of headers) {
-    if (h.name && h.name.toLowerCase() === lname) {
-      h.value = value;
-      found = true;
-      break;
-    }
-  }
-  if (!found) headers.push({ name, value });
-}
+// setOrAddHeader removed (no longer injecting headers)
 
 // Header parsing utilities
 // ParseContentRange: "bytes <start>-<end>/<size|*>"
@@ -186,19 +173,12 @@ function recordOutboundRange(details) {
 // Download logic
 async function StartDownload(url, referer, forceRange) {
   const headerStrings = [];
-  const headerObjs = [];
   if (forceRange) {
     headerStrings.push('Range: bytes=0-');
-    headerObjs.push({ name: 'Range', value: 'bytes=0-' });
   }
   if (referer) {
     headerStrings.push(`Referer: ${referer}`);
-    headerObjs.push({ name: 'Referer', value: referer });
   }
-
-  // Prepare fallback injection
-  PENDING_DOWNLOAD_URLS.add(url);
-  PENDING_HEADERS_BY_URL.set(url, headerObjs.slice());
 
   return new Promise((resolve) => {
     try {
@@ -220,36 +200,15 @@ async function StartDownload(url, referer, forceRange) {
 // webRequest listeners
 chrome.webRequest.onBeforeSendHeaders.addListener(
   (details) => {
-    // Inject headers for pending downloads initiated by the extension
-    try {
-      if (PENDING_DOWNLOAD_URLS.has(details.url)) {
-        const initiator = details.initiator || details.originUrl || '';
-        if (initiator && initiator.startsWith(`chrome-extension://${chrome.runtime.id}`)) {
-          const inject = PENDING_HEADERS_BY_URL.get(details.url) || [];
-          const headers = details.requestHeaders || [];
-          for (const h of inject) {
-            setOrAddHeader(headers, h.name, h.value);
-          }
-          // Clean up; only need to inject once
-          PENDING_DOWNLOAD_URLS.delete(details.url);
-          PENDING_HEADERS_BY_URL.delete(details.url);
-          return { requestHeaders: headers };
-        }
-      }
-    } catch (_) {
-      // ignore
-    }
-
-    // Record outbound Range for mp4-like URLs
+    // Record outbound Range for mp4-like URLs (read-only listener)
     try {
       recordOutboundRange(details);
     } catch (_) {
       // ignore
     }
-    return { requestHeaders: details.requestHeaders };
   },
   { urls: ["<all_urls>"] },
-  ["requestHeaders", "blocking", "extraHeaders"]
+  ["requestHeaders", "extraHeaders"]
 );
 
 chrome.webRequest.onHeadersReceived.addListener(
