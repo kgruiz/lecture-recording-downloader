@@ -89,7 +89,7 @@ function setOrAddHeader(headers, name, value) {
 function ParseContentRange(value) {
   if (!value) return null;
   const v = value.trim();
-  const m = /^bytes\s+(\d+)-(\d+)/(\d+|\*)$/i.exec(v);
+  const m = /^bytes\s+(\d+)-(\d+)\/(\d+|\*)$/i.exec(v);
   if (!m) return null;
   const start = Number(m[1]);
   const end = Number(m[2]);
