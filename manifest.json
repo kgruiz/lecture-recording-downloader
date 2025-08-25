@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "MP4 Full Download Detector",
+  "version": "0.1.0",
+  "description": "Detect MP4 files on the page, determine if full download is available, and offer download.",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "downloads",
+    "storage",
+    "webRequest",
+    "webRequestBlocking"
+  ],
+  "host_permissions": ["<all_urls>"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content-script.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
