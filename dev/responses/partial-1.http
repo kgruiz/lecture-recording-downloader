@@ -1,0 +1,14 @@
+206 Partial Content
+Content-Type: video/mp4
+Last-Modified: Mon, 25 Aug 2025 14:34:03 GMT
+Date: Mon, 25 Aug 2025 16:14:47 GMT
+Content-Length: 833068480
+ETag: "59486a37c2a2f472ea8261ca9a8c39bb"
+Accept-Ranges: bytes
+Content-Range: bytes 16830-833085309/833085310
+x-amz-id-2: V5GEU309F8YbeleDw7xU4QtwE2PUt6nvv9x3HL3A7W/KhA10R80LP/9if9omPHTQJFWMb26hlwiKHcnzf/eYj/098yFSgmfAY3Gafu1BPDM=
+x-amz-server-side-encryption: AES256
+x-amz-replication-status: COMPLETED
+Server: AmazonS3
+x-amz-version-id: xPuHBFQmQjGgIzIFb3AyxcARQgNsuRCG
+x-amz-request-id: QAPNAZ93DN5GXHZV

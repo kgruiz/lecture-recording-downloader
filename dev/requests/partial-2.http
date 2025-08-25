@@ -1,0 +1,10 @@
+GET /leccap.engin.umich.edu/media/iq5sw4khwymabr2lxbp/1756126800-198-O-c13-13.mp4
+Range: bytes=917504-833085309
+Accept: */*
+Connection: Keep-Alive
+Accept-Encoding: identity
+Sec-Fetch-Dest: video
+Sec-Fetch-Mode: no-cors
+Sec-Fetch-Site: cross-site
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0 Safari/605.1.15
+X-Playback-Session-Id: 956652B8-56EE-43A9-8AB3-5339B8D89BD5
